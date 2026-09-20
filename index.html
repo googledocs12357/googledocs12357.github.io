@@ -1,0 +1,238 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Cookie Clicker</title> <style> * { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #2b1608, #5c2e0e, #1d0d04);
+  overflow-x: hidden;
+}
+
+header {
+  text-align: center;
+  padding: 25px 15px 10px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 42px;
+  color: #ffd166;
+  text-shadow: 3px 3px 0 #5a2d00;
+}
+
+.game {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 20px;
+  gap: 25px;
+}
+
+.cookie-area,
+.shop {
+  background: rgba(0, 0, 0, 0.35);
+  border: 2px solid rgba(255, 209, 102, 0.3);
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+
+.cookie-area {
+  flex: 1;
+  min-width: 300px;
+  text-align: center;
+}
+
+.shop {
+  flex: 1;
+  min-width: 300px;
+}
+
+#counter {
+  font-size: 30px;
+  font-weight: bold;
+  color: #ffd166;
+  margin: 15px 0 5px;
+}
+
+#perSecond {
+  color: #ddd;
+  margin-bottom: 25px;
+}
+
+#cookie {
+  width: 260px;
+  height: 260px;
+  max-width: 80%;
+  border-radius: 50%;
+  border: 12px solid #9a4f0d;
+  background:
+    radial-gradient(circle at 30% 30%, #e8a44a 0 3%, transparent 4%),
+    radial-gradient(circle at 65% 25%, #71370a 0 3%, transparent 4%),
+    radial-gradient(circle at 70% 65%, #6b3208 0 4%, transparent 5%),
+    radial-gradient(circle at 35% 70%, #71370a 0 3%, transparent 4%),
+    radial-gradient(circle at 50% 45%, #7b3b0a 0 3%, transparent 4%),
+    radial-gradient(circle, #d88732, #a95712);
+  box-shadow:
+    inset -15px -15px 25px rgba(70,30,0,.35),
+    0 15px 35px rgba(0,0,0,.5);
+  cursor: pointer;
+  transition: transform .08s;
+  position: relative;
+  margin: 20px auto;
+}
+
+#cookie:hover {
+  transform: scale(1.04);
+}
+
+#cookie:active {
+  transform: scale(.94);
+}
+
+.upgrade {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 12px;
+  background: #8b4513;
+  color: white;
+  cursor: pointer;
+  text-align: left;
+  transition: .15s;
+}
+
+.upgrade:hover:not(:disabled) {
+  background: #b35d1c;
+  transform: translateY(-2px);
+}
+
+.upgrade:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.upgrade-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.upgrade-cost {
+  color: #ffd166;
+  margin-top: 4px;
+}
+
+.upgrade-info {
+  font-size: 13px;
+  color: #ddd;
+  margin-top: 5px;
+}
+
+#reset {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 18px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background: transparent;
+  color: #ddd;
+  cursor: pointer;
+}
+
+#reset:hover {
+  background: rgba(255,255,255,.1);
+}
+
+#floating {
+  position: fixed;
+  pointer-events: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffd166;
+  text-shadow: 2px 2px 3px #000;
+  animation: floatUp .8s ease-out forwards;
+  z-index: 10;
+}
+
+@keyframes floatUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+}
+
+footer {
+  text-align: center;
+  color: #aaa;
+  padding: 20px;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  h1 {
+    font-size: 32px;
+  }
+
+  .game {
+    padding: 10px;
+  }
+
+  #cookie {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+</style> </head> <body> <header> <h1>🍪 Cookie Clicker</h1> </header> <main class="game">
+<section class="cookie-area">
+  <div id="counter">0 cookies</div>
+  <div id="perSecond">0 cookies per second</div>
+
+  <div id="cookie" aria-label="Click the cookie"></div>
+
+  <p>Click the cookie to make cookies!</p>
+
+  <button id="reset">Reset Game</button>
+</section>
+
+<section class="shop">
+  <h2>🏪 Cookie Shop</h2>
+
+  <button class="upgrade" id="cursor">
+    <div class="upgrade-title">🖱️ Cursor</div>
+    <div class="upgrade-cost">Cost: <span id="cursorCost">15</span> cookies</div>
+    <div class="upgrade-info">Automatically makes 0.5 cookies per second.</div>
+  </button>
+
+  <button class="upgrade" id="grandma">
+    <div class="upgrade-title">👵 Grandma</div>
+    <div class="upgrade-cost">Cost: <span id="grandmaCost">100</span> cookies</div>
+    <div class="upgrade-info">Makes 5 cookies per second.</div>
+  </button>
+
+  <button class="upgrade" id="farm">
+    <div class="upgrade-title">🌾 Cookie Farm</div>
+    <div class="upgrade-cost">Cost: <span id="farmCost">500</span> cookies</div>
+    <div class="upgrade-info">Makes 25 cookies per second.</div>
+  </button>
+
+  <button class="upgrade" id="factory">
+    <div class="upgrade-title">🏭 Cookie Factory</div>
+    <div class="upgrade-cost">Cost: <span id="factoryCost">2500</span> cookies</div>
+    <div class="upgrade-info">Makes 100 cookies per second.</div>
+  </button>
+
+  <button class="upgrade" id="portal">
+    <div class="upgrade-title">🌀 Cookie Portal</div>
+    <div class="upgrade-cost">Cost: <span id="portalCost">10000</span> cookies</div>
+    <div class="upgrade-info">Makes 500 cookies per second.</div>
+  </button>
+</section>
+
+</main> <footer> Your progress is automatically saved in your browser. </footer> <script> let cookies = Number(localStorage.getItem("cookies")) || 0; const buildings = { cursor: { amount: Number(localStorage.getItem("cursor")) || 0, cost: 15, cps: 0.5 }, grandma: { amount: Number(localStorage.getItem("grandma")) || 0, cost: 100, cps: 5 }, farm: { amount: Number(localStorage.getItem("farm")) || 0, cost: 500, cps: 25 }, factory: { amount: Number(localStorage.getItem("factory")) || 0, cost: 2500, cps: 100 }, portal: { amount: Number(localStorage.getItem("portal")) || 0, cost: 10000, cps: 500 } }; const cookie = document.getElementById("cookie"); const counter = document.getElementById("counter"); const perSecond = document.getElementById("perSecond"); function getCPS() { return Object.values(buildings).reduce( (total, building) => total + building.amount * building.cps, 0 ); } function formatNumber(number) { if (number < 1000) return number.toFixed(number % 1 ? 1 : 0); const suffixes = ["K", "M", "B", "T", "Qa", "Qi"]; let index = -1; while (number >= 1000 && index < suffixes.length - 1) { number /= 1000; index++; } return number.toFixed(2) + suffixes[index]; } function update() { counter.textContent = formatNumber(cookies) + " cookies"; perSecond.textContent = formatNumber(getCPS()) + " cookies per second"; for (const [name, building] of Object.entries(buildings)) { const button = document.getElementById(name); const costElement = document.getElementById(name + "Cost"); costElement.textContent = formatNumber(building.cost); button.disabled = cookies < building.cost; } localStorage.setItem("cookies", cookies); for (const [name, building] of Object.entries(buildings)) { localStorage.setItem(name, building.amount); } } function clickCookie(event) { cookies++; const floating = document.createElement("div"); floating.id = "floating"; floating.textContent = "+1 🍪"; floating.style.left = event.clientX + "px"; floating.style.top = event.clientY + "px"; document.body.appendChild(floating); setTimeout(() => floating.remove(), 800); update(); } cookie.addEventListener("click", clickCookie); for (const [name, building] of Object.entries(buildings)) { document.getElementById(name).addEventListener("click", () => { if (cookies >= building.cost) { cookies -= building.cost; building.amount++; // Buildings become progressively more expensive. building.cost = Math.floor( building.cost * 1.15 ); update(); } }); } document.getElementById("reset").addEventListener("click", () => { if (confirm("Are you sure you want to reset your cookie empire?")) { cookies = 0; for (const building of Object.values(buildings)) { building.amount = 0; } // Reset original prices. buildings.cursor.cost = 15; buildings.grandma.cost = 100; buildings.farm.cost = 500; buildings.factory.cost = 2500; buildings.portal.cost = 10000; localStorage.clear(); update(); } }); // Produce cookies every second. setInterval(() => { cookies += getCPS(); update(); }, 1000); update(); </script> </body> </html>
